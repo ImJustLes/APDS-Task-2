@@ -1,6 +1,8 @@
 import express from "express"
 import fs from "fs"
-import app from "./app.js"
+import https from "https"
+import app from "./index.js"
+import { connect } from './db/dbCon.js'
 
 const PORT = 443
 
@@ -9,4 +11,8 @@ const server = https.createServer({
     cert: fs.readFileSync('keys/certificate.pem')
 }, app)
 
-server.listen(PORT)
+connect()
+
+server.listen(PORT, () => {
+    console.log('Server started on port number ', PORT)
+})

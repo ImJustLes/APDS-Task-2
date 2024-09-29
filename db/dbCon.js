@@ -2,20 +2,22 @@ import { MongoClient } from "mongodb"
 import dotenv from "dotenv"
 
 dotenv.config()
-
 const conString = process.env.ATLAS_URI || ""
-
 const client = new MongoClient(conString)
-let dbConn
-try{
-    dbConn = await client.connect()
-    console.log('Successfully connected to database')
-}
-catch (err)
-{
-    console.error(err)
+
+async function connect() {
+
+    try
+    {
+        await client.connect()
+        console.log('Connected to the database.')
+    
+    } catch (e)
+    {
+        console.error(e)
+    }
 }
 
 let db = client.db("users")
 
-export default db
+export { connect, client, db }

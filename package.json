@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "description": "<style>\r :root {\r     --dark_blue: #1a237e;\r     --pale_blue: #3f51b5;\r     --accent: #7986cb;\r     --background_blue: #e8eaf6;\r     --text: #121212;\r   }",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
