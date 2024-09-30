@@ -18,6 +18,6 @@ async function connect() {
     }
 }
 
-let db = client.db("users")
+let db = client.db("BankUsers")
 
 export { connect, client, db }

@@ -1,30 +1,29 @@
 import express from "express"
 import { db } from "./db/dbCon.js"
-import { ObjectId } from "mongodb"
-const app = express()
 
+const app = express()
 const router = express.Router();
 
-router.post("/login", async (req, res) => {
+app.use(express.json())
+
+app.post("/login", async (req, res) => {
 
     try {
         
-        const db = client.db('users')
         const user = {
-            username: req.body.username,
             email: req.body.email,
             password: req.body.password
         }
 
-        const collection = db.collection('users')
+        const collection = db.collection('BankUsers')
         const result = await collection.insertOne(user)
-        res.status(201).send(result)
+        res.status(201).json(result)
 
     } 
     catch (e) 
     {
             console.error('Error occurred while pushing: ', e)
-            res.status(500).send('Internal server error')
+            res.status(500).json('Internal server error')
     }
 })
 
