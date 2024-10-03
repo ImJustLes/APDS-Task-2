@@ -1,12 +1,17 @@
 import express from "express"
 import { db } from "./db/dbCon.js"
+import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
+import expressBrute from "express-brute"
 
 const app = express()
-const router = express.Router();
+
+var store = new expressBrute.MemoryStore()
+var bruteForce = new expressBrute(store)
 
 app.use(express.json())
 
-app.post("/login", async (req, res) => {
+app.post("/login", bruteForce.prevent, async (req, res) => {
 
  // Updated regex pattern: at least 4 characters, at least one special character
  const passwordRegex = /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{4,}$/;
@@ -16,7 +21,7 @@ app.post("/login", async (req, res) => {
      const user = {
          email: req.body.email,
          password: req.body.password
-     }
+     }        
 
      // Check if the password meets the regex requirements
      if (passwordRegex.test(user.password)) {
@@ -24,10 +29,13 @@ app.post("/login", async (req, res) => {
          const existingUser = await collection.findOne({ email: user.email })
 
          if (existingUser) {
-             // User exists, now check if the password matches
-             if (existingUser.password === user.password) {
-                 // Password matches
-                 res.status(200).json({ message: 'Login successful' })
+
+            const passwordMatch = await bcrypt.compare(user.password, existingUser.password)           
+
+             if (passwordMatch) {
+                 const generatedToken = jwt.sign({ email: req.body.email }, "SecretThing", { expiresIn: "1h"})
+                 res.status(200).json({ message: 'Login successful', token: generatedToken, email: req.body.email })
+                 console.log("Token is: ", generatedToken)
              } else {
                  // Password doesn't match
                  res.status(401).json({ message: 'Incorrect email or password' })
