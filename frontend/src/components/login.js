@@ -13,7 +13,7 @@ const Login =() => {
 
     const handleLogin = (e) =>{
         e.preventDefault()
-        axios.post('https://127.0.0.1.3000/login', {
+        axios.post('https://127.0.0.1.3001/login', {
             email, password
         })
         .then((response) => {

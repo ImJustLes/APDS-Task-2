@@ -106,45 +106,41 @@ database.database_connect()
 //#region Customer Requests
 // Signup Route
 app.post('/signup', brute.prevent, async (req, res) => {
+  console.log('Received signup request:', req.body); // Log the request body
+
   try {
-      // Validate incoming data
       const { id, name, surname, email, accountnumber, password } = req.body;
-      
+
+      // Input validation
       if (!id || !name || !surname || !email || !accountnumber || !password) {
-          return res.status(400).send({ message: 'All fields are required' });
-      }
-
-      // Check if the email already exists
-      const db = database.getDb();
-      const collection = db.collection('Customers');
-      const existingUser = await collection.findOne({ email });
-
-      if (existingUser) {
-          return res.status(400).send({ message: 'Email already exists' });
+          return res.status(400).send('All fields are required');
       }
 
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
-
-      // Create a new user object
-      const userModel = {
+      
+      // Create user object
+      let userModel = {
           id,
           name,
           surname,
           email,
           accountnumber,
-          password: hashedPassword
+          password: hashedPassword,
       };
 
+      // Access the database properly
+      const db = database.getDb();
+      const collection = db.collection('Customers');
+      
       // Insert the user into the database
       const result = await collection.insertOne(userModel);
+      console.log('User created successfully:', result);
 
-      // Return a success message
-      res.status(201).send({ message: 'User created successfully', userId: result.insertedId });
-      console.log(`User ${email} created successfully`);
+      res.status(201).send('Account created successfully!');
   } catch (err) {
-      console.error('Error during signup:', err);
-      res.status(500).send({ message: 'Error during signup' });
+      console.error('Error during signup:', err.message); // Log detailed error message
+      res.status(500).send('Error creating account: ' + err.message);
   }
 });
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import './stylesheet.css';  // Import CSS file here
+import '../../views/stylesheet.css';  // Import CSS file here
 
 const VerifyPayment = () => {
     const [title, setTitle] = useState('');

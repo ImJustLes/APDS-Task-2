@@ -24,7 +24,7 @@ const Signup = () => {
         setLoading(true); // Start loading
         setError(''); 
 
-        axios.post('http://localhost:3001/signup', {
+        axios.post('https://localhost:3001/signup', {
             id, name, surname, email, accountnumber, password
         })
         .then(response => {
@@ -33,8 +33,12 @@ const Signup = () => {
             navigate('/login');
         })
         .catch(error => {
-            console.error('Error creating account', error.response ? error.response.data : error.message)
-            alert('Error creating account')
+            setLoading(false);
+            const errorMsg = error.response && error.response.data 
+                ? error.response.data.message 
+                : error.message;
+            console.error('Error creating account', errorMsg);
+            alert('Error creating account: ' + errorMsg);
         })
 
     }

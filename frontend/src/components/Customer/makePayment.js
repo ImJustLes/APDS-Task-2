@@ -1,7 +1,7 @@
 import React, {useState} from "react"
 import axios from "axios"
-import { response } from '/../backend/app'
-import './stylesheet.css'  // Import CSS file here
+
+import '../../views/stylesheet.css'  // Import CSS file here
 
 const makePayment = () =>{
     const [payment, setPayment] = useState({
@@ -21,7 +21,7 @@ const makePayment = () =>{
         e.preventDefault()
         const response = axios.post('https://127.0.0.1:433/make_payment', payment, 
         {headers: {
-            'Authorisation': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         })
             .then(response => {
