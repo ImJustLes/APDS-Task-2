@@ -13,7 +13,7 @@ const Login =() => {
 
     const handleLogin = (e) =>{
         e.preventDefault()
-        axios.post('https://127.0.0.1.3001/login', {
+        axios.post('https://localhost:3001/login', {
             email, password
         })
         .then((response) => {
@@ -23,8 +23,8 @@ const Login =() => {
             navigate('/')
         })
         .catch(error => {
-            console.error('Login Failed', error)
-            alert('Login attempt Failed, please check your email and password')
+            console.error('Login error:', error.response ? error.response.data : error.message);
+            alert('Login attempt Failed, please check your email and password');
         })
     }
 
