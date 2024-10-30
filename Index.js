@@ -3,6 +3,7 @@ import { db } from "./db/dbCon.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import expressBrute from "express-brute"
+import { ObjectId } from "mongodb"
 
 const app = express()
 
@@ -112,6 +113,27 @@ app.get('/GetPayements', async (_, res) => {
     catch (e) 
     {
         console.error('Error retreiving items: ', e)
+        res.status(404).send('Not found')
+    }
+})
+
+app.delete('/VerifyPayement/:id', async (req, res) => {
+
+    try {
+
+        const query = {_id: new ObjectId(req.params.id)}
+        const PendingPayementsCollection = db.collection('PendingPayements')
+        const ConfirmedPayementsCollection = db.collection('ConfirmedPayements')
+        const confirmedTransaction = await PendingPayementsCollection.findOne(query)
+
+        let result = await PendingPayementsCollection.deleteOne(query)
+        await ConfirmedPayementsCollection.insertOne(confirmedTransaction)
+        
+        res.status(200).send(result)
+    } 
+    catch (e) 
+    {
+        console.error('Error confirming transaction: ', e)
         res.status(404).send('Not found')
     }
 })
