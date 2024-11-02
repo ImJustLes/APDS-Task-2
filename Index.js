@@ -165,11 +165,13 @@ app.post('/signup', async (req, res) => {
             password: req.body.password
         }
 
-    const existingUser = await collection.findOne({ email: userModel.email })
+    const existingUserByEmail = await collection.findOne({ email: userModel.email })
+    const existingUserByAccNum = await collection.findOne({ accountnumber: userModel.accountnumber })
+    const existingUserById = await collection.findOne({ id: userModel.id })
 
     if(userModel.id && userModel.accountnumber && userModel.name && userModel.surname && userModel.email && userModel.password){
     
-        if(!existingUser) {
+        if(!existingUserByEmail && !existingUserByAccNum && !existingUserById) {
 
             if(passwordRegex.test(userModel.password) && emailRegex.test(userModel.email)) {
                     
